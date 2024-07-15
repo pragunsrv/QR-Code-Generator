@@ -62,3 +62,8 @@ button:hover {
 #qrcode {
     margin-top: 20px;
 }
+
+#download-btn {
+    margin-top: 20px;
+    display: none;
+}
