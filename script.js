@@ -19,13 +19,13 @@ document.getElementById('qr-form').addEventListener('submit', function(e) {
     var formattedText;
     switch (type) {
         case 'url':
-            formattedText = 'URL:' + text;
+            formattedText = text;
             break;
         case 'email':
-            formattedText = 'MAILTO:' + text;
+            formattedText = 'mailto:' + text;
             break;
         case 'phone':
-            formattedText = 'TEL:' + text;
+            formattedText = 'tel:' + text;
             break;
         default:
             formattedText = text;
@@ -60,7 +60,7 @@ function saveToHistory(text, size, color) {
     var historyContainer = document.getElementById('history');
     var historyItem = document.createElement('div');
     historyItem.classList.add('history-item');
-    historyItem.innerHTML = `<div class="qrcode-history" style="width:${size}px; height:${size}px; background-color:${color};">
+    historyItem.innerHTML = `<div class="qrcode-history" style="width:${size}px; height:${size}px;">
                                 <div id="history-qrcode-${Date.now()}"></div>
                              </div>
                              <p>${text}</p>`;
@@ -73,4 +73,29 @@ function saveToHistory(text, size, color) {
         colorDark: color,
         colorLight: "#ffffff"
     });
+
+    updateLocalStorage();
 }
+
+// Update local storage with current history
+function updateLocalStorage() {
+    var historyItems = document.querySelectorAll('.history-item');
+    var history = Array.from(historyItems).map(item => {
+        var qrCodeDiv = item.querySelector('div');
+        var qrCode = qrCodeDiv.querySelector('img');
+        return {
+            text: item.querySelector('p').textContent,
+            size: qrCodeDiv.offsetWidth,
+            color: qrCodeDiv.style.backgroundColor
+        };
+    });
+    localStorage.setItem('qrCodeHistory', JSON.stringify(history));
+}
+
+// Load history from local storage on page load
+window.onload = function() {
+    var history = JSON.parse(localStorage.getItem('qrCodeHistory')) || [];
+    history.forEach(item => {
+        saveToHistory(item.text, item.size, item.color);
+    });
+};
