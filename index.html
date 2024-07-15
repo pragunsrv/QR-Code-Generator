@@ -10,8 +10,10 @@
     <div class="container">
         <h1>QR Code Generator</h1>
         <form id="qr-form">
+            <label for="text-input">Enter text:</label>
             <input type="text" id="text-input" placeholder="Enter text" required>
             <button type="submit">Generate QR Code</button>
+            <p id="error-message"></p>
         </form>
         <div id="qrcode"></div>
     </div>
